@@ -26,20 +26,19 @@ namespace sofa::helper
 {
 
 ScopedAdvancedTimer::ScopedAdvancedTimer(const std::string& message)
-    : m_id( message )
+    : ScopedAdvancedTimer(message.c_str())
 {
-    AdvancedTimer::stepBegin( m_id );
 }
 
 ScopedAdvancedTimer::ScopedAdvancedTimer( const char* message )
-    : m_id( message )
+    : message( message )
 {
-    AdvancedTimer::stepBegin( m_id );
+    AdvancedTimer::stepBegin( message );
 }
 
 ScopedAdvancedTimer::~ScopedAdvancedTimer()
 {
-    AdvancedTimer::stepEnd( m_id );
+    AdvancedTimer::stepEnd( message );
 }
 
 } /// sofa::helper

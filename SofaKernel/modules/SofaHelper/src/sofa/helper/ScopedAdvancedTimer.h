@@ -24,8 +24,6 @@
 #include <sofa/helper/config.h>
 #include<string>
 
-#include <sofa/helper/AdvancedTimer.h>
-
 namespace sofa::helper
 {
 
@@ -39,10 +37,9 @@ namespace sofa::helper
 ///     measurement recorded.
 struct SOFA_HELPER_API ScopedAdvancedTimer
 {
-    AdvancedTimer::IdStep m_id;
-
-    explicit ScopedAdvancedTimer(const std::string& message);
-    explicit ScopedAdvancedTimer( const char* message );
+    const char* message;
+    ScopedAdvancedTimer(const std::string& message);
+    ScopedAdvancedTimer( const char* message );
     ~ScopedAdvancedTimer();
 };
 

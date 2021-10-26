@@ -24,8 +24,10 @@
 #include <sofa/helper/system/thread/thread_specific_ptr.h>
 #include <sofa/helper/system/thread/CTime.h>
 #include <sofa/type/vector.h>
+#include <sofa/helper/ScopedAdvancedTimer.h>
 
 #include <ostream>
+#include <istream>
 #include <string>
 #include <map>
 
@@ -165,12 +167,10 @@ public:
 
             /// the list of the id names. the Ids are the indices in the vector
             std::vector<std::string> idsList;
-            std::map<std::string, unsigned int> idsMap;
 
             IdFactory()
             {
-                idsMap.insert({"0", 0});
-                idsList.push_back("0");
+                idsList.push_back(std::string("0")); // ID 0 == "0" or empty string
             }
             
         public:
@@ -184,17 +184,22 @@ public:
                 if (name.empty())
                     return 0;
                 IdFactory& idfac = getInstance();
+                std::vector<std::string>::iterator it = idfac.idsList.begin();
+                unsigned int i = 0;
 
-                const auto it = idfac.idsMap.find(name);
-                if (it == idfac.idsMap.end())
+                while (it != idfac.idsList.end() && (*it) != name)
                 {
-                    const auto idsMapSize = idfac.idsMap.size();
-                    idfac.idsMap.insert({name, idsMapSize});
-                    idfac.idsList.push_back(name);
-                    return idsMapSize;
+                    ++it;
+                    i++;
                 }
 
-                return it->second;
+                if (it!=idfac.idsList.end())
+                    return i;
+                else
+                {
+                    idfac.idsList.push_back(name);
+                    return i;
+                }
             }
 
             static std::size_t getLastID()
